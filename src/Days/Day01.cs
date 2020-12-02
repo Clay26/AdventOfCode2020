@@ -10,20 +10,16 @@ namespace AdventOfCode.Days
         public override string PartOne(string input)
         {
             double magicNumber = 2020;
+            var numbers = CreateArray(input);
 
-            List<double> numbers = CreateArray(input);
-            numbers.Sort();
+            var answer = FindTwoNumbersThatAddToTarget(numbers, magicNumber);
 
-            for (int i = 0; i < numbers.Count(); i++)
+            if (answer.Item1 != 0)
             {
-                double matchingNumber = magicNumber - numbers[i];
-                if (numbers.IndexOf(matchingNumber) != -1)
-                {
-                    return Convert.ToString(matchingNumber * numbers[i]);
-                }
+                return Convert.ToString(answer.Item1 * answer.Item2);
             }
 
-            return "null";
+            return "No answer found.";
         }
         
         public List<double> CreateArray(string input)
@@ -39,9 +35,52 @@ namespace AdventOfCode.Days
             return num;
         }
 
+        public Tuple<double,double> FindTwoNumbersThatAddToTarget(List<double> numbers, double target)
+        {
+            numbers.Sort();
+
+            for (int i = 0; i < numbers.Count(); i++)
+            {
+                double matchingNumber = target - numbers[i];
+                if (numbers.IndexOf(matchingNumber) != -1)
+                {
+                    return new Tuple<double, double>(matchingNumber, numbers[i]);
+                }
+            }
+
+            return new Tuple<double, double>(0, 0);
+        }
+
+        public Tuple<double,double,double> FindThreeNumbersThatAddToTarget(List<double> numbers, double target)
+        {
+
+            for (int i = 0; i < numbers.Count(); i++)
+            {
+                double magicNumber = target - numbers[i];
+                var answer = FindTwoNumbersThatAddToTarget(numbers, magicNumber);
+
+                if (answer.Item1 != 0)
+                {
+                    return new Tuple<double, double, double>(numbers[i], answer.Item1, answer.Item2);
+                }
+            }
+
+            return new Tuple<double,double,double>(0,0,0);
+        }
+
         public override string PartTwo(string input)
         {
-            throw new NotImplementedException();
+            double magicNumber = 2020;
+            var numbers = CreateArray(input);
+
+            var answer = FindThreeNumbersThatAddToTarget(numbers, magicNumber);
+
+            if (answer.Item1 != 0)
+            {
+                return Convert.ToString(answer.Item1 * answer.Item2 * answer.Item3);
+            }
+
+            return "No answer found.";
         }
     }
 }
