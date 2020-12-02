@@ -12,7 +12,7 @@ namespace AdventOfCode.Days
             double magicNumber = 2020;
             var numbers = CreateArray(input);
 
-            var answer = FindTwoNumbersThatAddToTarget(numbers, magicNumber);
+            var answer = FindTwoNumbersThatAddToTarget(numbers, magicNumber, true);
 
             if (answer.Item1 != 0)
             {
@@ -35,11 +35,20 @@ namespace AdventOfCode.Days
             return num;
         }
 
-        public Tuple<double,double> FindTwoNumbersThatAddToTarget(List<double> numbers, double target)
+        public Tuple<double,double> FindTwoNumbersThatAddToTarget(List<double> numbers, double target, bool optimize)
         {
             numbers.Sort();
+            int startingPoint;
+            if (optimize)
+            {
+                startingPoint = numbers.Count() / 2;
+            }
+            else
+            {
+                startingPoint = 0;
+            }
 
-            for (int i = 0; i < numbers.Count(); i++)
+            for (int i = startingPoint; i < numbers.Count(); i++)
             {
                 double matchingNumber = target - numbers[i];
                 if (numbers.IndexOf(matchingNumber) != -1)
@@ -53,11 +62,10 @@ namespace AdventOfCode.Days
 
         public Tuple<double,double,double> FindThreeNumbersThatAddToTarget(List<double> numbers, double target)
         {
-
             for (int i = 0; i < numbers.Count(); i++)
             {
                 double magicNumber = target - numbers[i];
-                var answer = FindTwoNumbersThatAddToTarget(numbers, magicNumber);
+                var answer = FindTwoNumbersThatAddToTarget(numbers, magicNumber, false);
 
                 if (answer.Item1 != 0)
                 {
