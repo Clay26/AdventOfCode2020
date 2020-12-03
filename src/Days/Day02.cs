@@ -42,7 +42,7 @@ namespace AdventOfCode.Days
         {
             var input = range.Split("-");
 
-            return new Tuple<double,double>(Convert.ToDouble(input[0]),Convert.ToDouble(input[2]));
+            return new Tuple<double,double>(Convert.ToDouble(input[0]),Convert.ToDouble(input[1]));
             
         }
         public class Password
