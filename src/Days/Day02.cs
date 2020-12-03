@@ -30,16 +30,21 @@ namespace AdventOfCode.Days
         public Password ParseLine(string line)
         {
             var input = line.Split(" ");
-            
-            double min = Convert.ToDouble(Convert.ToString(input[0][0]));
 
-            double max = Convert.ToDouble(Convert.ToString(input[0][2]));
+            var minMax = ParseMinMax(input[0]);
 
             string letter = Convert.ToString(input[1][0]);
 
-            return new Password(letter, min, max, input[2]);
+            return new Password(letter, minMax.Item1, minMax.Item2, input[2]);
         }
 
+        public Tuple<double,double> ParseMinMax(string range)
+        {
+            var input = range.Split("-");
+
+            return new Tuple<double,double>(Convert.ToDouble(input[0]),Convert.ToDouble(input[2]));
+            
+        }
         public class Password
         {
             string policyLetter;
