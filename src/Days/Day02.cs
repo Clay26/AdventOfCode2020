@@ -12,7 +12,7 @@ namespace AdventOfCode.Days
             double validPasswords = 0;
             foreach (string line in input.Split("\n"))
             {
-                if (ParseLine(line).valid())
+                if (ParseLine(line).oldValid())
                 {
                     validPasswords += 1;
                 }
@@ -24,7 +24,16 @@ namespace AdventOfCode.Days
 
         public override string PartTwo(string input)
         {
-            throw new NotImplementedException();
+            double validPasswords = 0;
+            foreach (string line in input.Split("\n"))
+            {
+                if (ParseLine(line).newValid())
+                {
+                    validPasswords += 1;
+                }
+            }
+
+            return Convert.ToString(validPasswords);
         }
 
         public Password ParseLine(string line)
@@ -63,11 +72,27 @@ namespace AdventOfCode.Days
                 this.passwordContent = password;
             }
 
-            public bool valid()
+            public bool oldValid()
             {
                 double count = this.passwordContent.Split(this.policyLetter).Length - 1;
 
                 if (count >= this.min && count <= this.max)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            public bool newValid()
+            {
+                string pos = "00";
+                pos[0] = this.passwordContent[this.min - 1];
+                pos[1] = this.passwordContent[this.max - 1];
+
+                double count = pos.Split(this.policyLetter).Length - 1;
+
+                if (count == 1)
                 {
                     return true;
                 }
