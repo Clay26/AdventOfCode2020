@@ -86,9 +86,7 @@ namespace AdventOfCode.Days
 
             public bool newValid()
             {
-                string pos = "00";
-                pos[0] = this.passwordContent[this.min - 1];
-                pos[1] = this.passwordContent[this.max - 1];
+                string pos = this.passwordContent.Substring(this.min - 1, this.min) + this.passwordContent.Substring(this.max - 1, this.max);
 
                 double count = pos.Split(this.policyLetter).Length - 1;
 
