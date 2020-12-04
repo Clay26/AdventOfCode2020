@@ -31,79 +31,22 @@ namespace AdventOfCode.Days
         {
             Coords startingLoc = new Coords(0,0);
 
-            Map treeMap1 = new Map(CreateMap(input), startingLoc, 1, 1);
+            Map treeMap = new Map(CreateMap(input), startingLoc, 1, 1);
+            Toboggan tob = new Toboggan(treeMap);
 
-            double treeCount1 = 0;
+            var treeCount1 = tob.DownhillRun();
 
-            while (!treeMap1.AtBottom())
-            {
-                treeMap1.Move();
+            tob.UpdateSlope(3,1);
+            var treeCount2 = tob.DownhillRun();
 
-                if (treeMap1.CurrSymbol() == "#")
-                {
-                    treeCount1 += 1;
-                }
-            }
+            tob.UpdateSlope(5,1);
+            var treeCount3 = tob.DownhillRun();
 
-            Map treeMap2 = new Map(CreateMap(input), startingLoc, 3, 1);
-            treeMap2.Reset();
+            tob.UpdateSlope(7,1);
+            var treeCount4 = tob.DownhillRun();
 
-            double treeCount2 = 0;
-
-            while (!treeMap2.AtBottom())
-            {
-                treeMap2.Move();
-
-                if (treeMap2.CurrSymbol() == "#")
-                {
-                    treeCount2 += 1;
-                }
-            }
-
-            Map treeMap3 = new Map(CreateMap(input), startingLoc, 5, 1);
-            treeMap3.Reset();
-
-            double treeCount3 = 0;
-
-            while (!treeMap3.AtBottom())
-            {
-                treeMap3.Move();
-
-                if (treeMap3.CurrSymbol() == "#")
-                {
-                    treeCount3 += 1;
-                }
-            }
-
-            Map treeMap4 = new Map(CreateMap(input), startingLoc, 7, 1);
-            treeMap4.Reset();
-
-            double treeCount4 = 0;
-
-            while (!treeMap4.AtBottom())
-            {
-                treeMap4.Move();
-
-                if (treeMap4.CurrSymbol() == "#")
-                {
-                    treeCount4 += 1;
-                }
-            }
-
-            Map treeMap5 = new Map(CreateMap(input), startingLoc, 1, 2);
-            treeMap5.Reset();
-
-            double treeCount5 = 0;
-
-            while (!treeMap5.AtBottom())
-            {
-                treeMap5.Move();
-
-                if (treeMap5.CurrSymbol() == "#")
-                {
-                    treeCount5 += 1;
-                }
-            }
+            tob.UpdateSlope(1,2);
+            var treeCount5 = tob.DownhillRun();
 
             return Convert.ToString(treeCount1 * treeCount2 * treeCount3 * treeCount4 * treeCount5);
         }
@@ -140,21 +83,26 @@ namespace AdventOfCode.Days
         {
             Coords loc;
 
-            int moveX;
-
-            int moveY;
+            Coords moveModifiers;
 
             List<string> graph;
 
-            public Map(List<string> graph, Coords startingLoc, int travelX, int travelY)
+            public Map(List<string> graph, Coords startingLoc, Coords moveModifiers)
             {
                 this.graph = graph;
 
                 this.loc = startingLoc;
 
-                this.moveX = travelX;
+                this.moveModifiers = moveModifiers;
+            }
 
-                this.moveY = travelY;
+            public Map(List<string> graph, Coords startingLoc, double x, double y)
+            {
+                this.graph = graph;
+
+                this.loc = startingLoc;
+
+                this.moveModifiers = new Coords(x,y);
             }
 
             public void Reset()
@@ -164,13 +112,20 @@ namespace AdventOfCode.Days
                 this.loc.y = 0;
             }
 
+            public void UpdateModifiers(double x, double y)
+            {
+                this.moveModifiers.x = x;
+
+                this.moveModifiers.y = y;
+            }
+
             public void Move()
             {
-                var xLoc = (this.loc.x + (1 * this.moveX)) % (this.MapXDistance() + 1);
+                var xLoc = (this.loc.x + (1 * this.moveModifiers.x)) % (this.MapXDistance() + 1);
 
                 this.loc.x = xLoc;
 
-                var yLoc = (this.loc.y + (1 * this.moveY));
+                var yLoc = (this.loc.y + (1 * this.moveModifiers.y));
 
                 if (yLoc > this.MapYDistance())
                 {
@@ -200,6 +155,39 @@ namespace AdventOfCode.Days
             public bool AtBottom()
             {
                 return this.loc.y == MapYDistance();
+            }
+        }
+
+        public class Toboggan
+        {
+            Map treeMap;
+
+            public Toboggan(Map treeMap)
+            {
+                this.treeMap = treeMap;
+            }
+
+            public void UpdateSlope(double x, double y)
+            {
+                this.treeMap.UpdateModifiers(x, y);
+            }
+
+            public double DownhillRun()
+            {
+                double treeCount = 0;
+                while (!this.treeMap.AtBottom())
+                {
+                    this.treeMap.Move();
+
+                    if (this.treeMap.CurrSymbol() == "#")
+                    {
+                        treeCount += 1;
+                    }
+                }
+
+                this.treeMap.Reset();
+
+                return treeCount;
             }
         }
     }
