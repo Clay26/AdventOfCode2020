@@ -11,26 +11,14 @@ namespace AdventOfCode.Days
         {
             Coords startingLoc = new Coords(0,0);
             Map treeMap = new Map(CreateMap(input), startingLoc, 3, 1);
+            Toboggan tob = new Toboggan(treeMap);
 
-            double treeCount = 0;
-
-            while (!treeMap.AtBottom())
-            {
-                treeMap.Move();
-
-                if (treeMap.CurrSymbol() == "#")
-                {
-                    treeCount += 1;
-                }
-            }
-
-            return Convert.ToString(treeCount);
+            return Convert.ToString(tob.DownhillRun());
         }
 
         public override string PartTwo(string input)
         {
             Coords startingLoc = new Coords(0,0);
-
             Map treeMap = new Map(CreateMap(input), startingLoc, 1, 1);
             Toboggan tob = new Toboggan(treeMap);
 
